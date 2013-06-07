@@ -1,0 +1,351 @@
+DEBUG   |121128 10:12:27|*** Batching successive steps (nesting level 1)
+DEBUG   |121128 10:12:27|====== Starting Step number 1 ======
+DEBUG   |121128 10:12:27|Kettenrad :: BREAKING STEP BEFORE SWITCHING DOMAIN
+DEBUG   |121128 10:12:27|AECoreDomainInit :: New instance
+DEBUG   |121128 10:12:27|----- Finished operation 1 ------
+INFO    |121128 10:12:27|--------------------------------------------------------------------------------
+INFO    |121128 10:12:27|Akeeba Backup 3.6.7 (2012-10-13)
+INFO    |121128 10:12:27|Got backup?
+INFO    |121128 10:12:27|--------------------------------------------------------------------------------
+INFO    |121128 10:12:27|--- System Information ---
+INFO    |121128 10:12:27|PHP Version        :5.3.18
+INFO    |121128 10:12:27|PHP OS             :Linux
+INFO    |121128 10:12:27|PHP SAPI           :cgi-fcgi
+INFO    |121128 10:12:27|OS Version         :Linux
+INFO    |121128 10:12:27|DB Version         :5.5.27-cll
+INFO    |121128 10:12:27|Web Server         :Apache
+INFO    |121128 10:12:27|Joomla! version    :2.5.7
+INFO    |121128 10:12:27|Mozilla/5.0 (Windows NT 5.1; rv:17.0) Gecko/17.0 Firefox/17.0
+INFO    |121128 10:12:27|Safe mode          :0
+INFO    |121128 10:12:27|Display errors     :
+INFO    |121128 10:12:27|Error reporting    :E_ERROR | E_WARNING | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING | E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE
+INFO    |121128 10:12:27|Error display      :off
+INFO    |121128 10:12:27|Disabled functions :dl, show_source, system, shell_exec, passthru, exec, popen, proc_open, allow_url_fopen
+INFO    |121128 10:12:27|open_basedir restr.:
+INFO    |121128 10:12:27|Max. exec. time    :30
+INFO    |121128 10:12:27|Memory limit       :256M
+INFO    |121128 10:12:27|Current mem. usage :12168336
+INFO    |121128 10:12:27|GZIP Compression   : available (good)
+INFO    |121128 10:12:27|JPATH_BASE         :<root>/administrator
+INFO    |121128 10:12:27|JPATH_SITE         :<root>
+INFO    |121128 10:12:27|JPATH_ROOT         :<root>
+INFO    |121128 10:12:27|JPATH_CACHE        :<root>/cache
+INFO    |121128 10:12:27|Computed root      :<root>
+INFO    |121128 10:12:27|Output directory   :<root>/administrator/components/com_akeeba/backup
+INFO    |121128 10:12:27|--------------------------------------------------------------------------------
+INFO    |121128 10:12:27|Akeeba Backup has detected the following potential problems:
+INFO    |121128 10:12:27|- 203 Default output directory in use (low)
+INFO    |121128 10:12:27|- 401 ZIP format selected (low)
+INFO    |121128 10:12:27|You probably do not have to worry about them, but you should be aware of them.
+INFO    |121128 10:12:27|--------------------------------------------------------------------------------
+INFO    |121128 10:12:27|Loaded profile #1
+DEBUG   |121128 10:12:27|AEArchiverZip :: New instance
+DEBUG   |121128 10:12:27|Chunk size for CRC is now 1048576 bytes
+DEBUG   |121128 10:12:27|Archive template name: site-[HOST]-[DATE]-[TIME]
+DEBUG   |121128 10:12:27|Expanded template name: site-jorge.w7.cl-20121128-131227
+DEBUG   |121128 10:12:27|Backup type is now set to 'full'
+DEBUG   |121128 10:12:27|Expanded archive file name: <root>/administrator/components/com_akeeba/backup/site-jorge.w7.cl-20121128-131227.zip
+DEBUG   |121128 10:12:27|Initializing archiver engine
+DEBUG   |121128 10:12:27|AEArchiverZip :: initialize - archive <root>/administrator/components/com_akeeba/backup/site-jorge.w7.cl-20121128-131227.zip
+INFO    |121128 10:12:27|AEArchiverZip :: Split ZIP creation enabled
+DEBUG   |121128 10:12:27|AEArchiverZip :: CntDir Tempfile = <root>/administrator/components/com_akeeba/backup/akzcdeHSnJ9
+DEBUG   |121128 10:12:27|AEArchiverZip :: Killing old archive
+DEBUG   |121128 10:12:27|Updating multipart status to 1
+DEBUG   |121128 10:12:27|----- Finished operation 2 ------
+DEBUG   |121128 10:12:27|----- Finished operation 3 ------
+DEBUG   |121128 10:12:27|Successful Smart algorithm on AECoreDomainInit
+DEBUG   |121128 10:12:27|Kettenrad :: Domain 'init' has finished.
+DEBUG   |121128 10:12:27|====== Finished Step number 1 ======
+DEBUG   |121128 10:12:27|*** Engine steps batching: Break flag detected.
+DEBUG   |121128 10:12:27|*** Batching of engine steps finished. I will now return control to the caller.
+DEBUG   |121128 10:12:27|Sleeping for 1942.59095192 msec, using usleep()
+DEBUG   |121128 10:12:29|Saving Kettenrad instance backend
+DEBUG   |121128 10:12:29|
+DEBUG   |121128 10:12:30| -- Loaded stored Akeeba Factory (backend)
+DEBUG   |121128 10:12:30|====== Starting Step number 1 ======
+DEBUG   |121128 10:12:30|Kettenrad :: BREAKING STEP BEFORE SWITCHING DOMAIN
+DEBUG   |121128 10:12:30|AECoreDomainInstaller :: New instance
+DEBUG   |121128 10:12:30|  Virtual add:installation/README.html (551) - 8
+DEBUG   |121128 10:12:30|  Virtual add:installation/extrainfo.ini (83) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 1 ------
+DEBUG   |121128 10:12:30|Initializing with JPA package 
+DEBUG   |121128 10:12:30|  Adding installation/css/img/btn_next.png; Next offset:1897
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/img/btn_next.png (1819) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 2 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/img/btn_prev.png; Next offset:3781
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/img/btn_prev.png (1825) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 3 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/img/busy.gif; Next offset:5207
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/img/busy.gif (1608) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 4 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/img/header_bg.png; Next offset:6798
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/img/header_bg.png (1531) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 5 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/img/logo.png; Next offset:7854
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/img/logo.png (1001) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 6 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/install.css; Next offset:9173
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/install.css (4648) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 7 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/redmond/images/ui-bg_flat_0_aaaaaa_40x100.png; Next offset:9358
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/redmond/images/ui-bg_flat_0_aaaaaa_40x100.png (180) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 8 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/redmond/images/ui-bg_flat_55_fbec88_40x100.png; Next offset:9546
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/redmond/images/ui-bg_flat_55_fbec88_40x100.png (182) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 9 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/redmond/images/ui-bg_glass_75_d0e5f5_1x400.png; Next offset:9753
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/redmond/images/ui-bg_glass_75_d0e5f5_1x400.png (124) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 10 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/redmond/images/ui-bg_glass_85_dfeffc_1x400.png; Next offset:9959
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/redmond/images/ui-bg_glass_85_dfeffc_1x400.png (123) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 11 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/redmond/images/ui-bg_glass_95_fef1ec_1x400.png; Next offset:10161
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/redmond/images/ui-bg_glass_95_fef1ec_1x400.png (119) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 12 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/redmond/images/ui-bg_gloss-wave_55_5c9ccc_500x100.png; Next offset:13530
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/redmond/images/ui-bg_gloss-wave_55_5c9ccc_500x100.png (3457) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 13 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/redmond/images/ui-bg_inset-hard_100_f5f8f9_1x100.png; Next offset:13721
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/redmond/images/ui-bg_inset-hard_100_f5f8f9_1x100.png (104) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 14 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/redmond/images/ui-bg_inset-hard_100_fcfdfd_1x100.png; Next offset:13896
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/redmond/images/ui-bg_inset-hard_100_fcfdfd_1x100.png (88) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 15 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/redmond/images/ui-icons_217bc0_256x240.png; Next offset:18142
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/redmond/images/ui-icons_217bc0_256x240.png (4379) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 16 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/redmond/images/ui-icons_2e83ff_256x240.png; Next offset:22388
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/redmond/images/ui-icons_2e83ff_256x240.png (4379) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 17 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/redmond/images/ui-icons_469bdd_256x240.png; Next offset:27677
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/redmond/images/ui-icons_469bdd_256x240.png (5399) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 18 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/redmond/images/ui-icons_6da8d5_256x240.png; Next offset:31922
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/redmond/images/ui-icons_6da8d5_256x240.png (4379) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 19 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/redmond/images/ui-icons_cd0a0a_256x240.png; Next offset:36168
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/redmond/images/ui-icons_cd0a0a_256x240.png (4379) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 20 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/redmond/images/ui-icons_d8e7f3_256x240.png; Next offset:40414
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/redmond/images/ui-icons_d8e7f3_256x240.png (4379) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 21 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/redmond/images/ui-icons_f9bd01_256x240.png; Next offset:44659
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/redmond/images/ui-icons_f9bd01_256x240.png (4379) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 22 ------
+DEBUG   |121128 10:12:30|  Adding installation/css/redmond/jquery-ui-redmond.css; Next offset:49831
+DEBUG   |121128 10:12:30|  Virtual add:installation/css/redmond/jquery-ui-redmond.css (27480) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 23 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/antidos.php; Next offset:51010
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/antidos.php (2739) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 24 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/automation.php; Next offset:51986
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/automation.php (2308) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 25 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/configuration.php; Next offset:54599
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/configuration.php (7166) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 26 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/db.php; Next offset:58252
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/db.php (13182) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 27 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/ftp.php; Next offset:61949
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/ftp.php (12924) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 28 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/logic/ajax.php; Next offset:63735
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/logic/ajax.php (5122) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 29 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/logic/dbsetup.php; Next offset:66516
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/logic/dbsetup.php (8186) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 30 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/logic/finish.php; Next offset:68773
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/logic/finish.php (5393) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 31 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/logic/index.php; Next offset:70861
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/logic/index.php (5061) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 32 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/logic/restore.php; Next offset:77029
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/logic/restore.php (22166) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 33 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/logic/setup.php; Next offset:79162
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/logic/setup.php (5344) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 34 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/output/dbsetup.php; Next offset:81006
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/output/dbsetup.php (6063) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 35 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/output/finish.php; Next offset:82001
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/output/finish.php (2389) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 36 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/output/index.php; Next offset:83783
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/output/index.php (5093) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 37 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/output/setup.php; Next offset:85919
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/output/setup.php (7911) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 38 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/output.php; Next offset:88133
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/output.php (6538) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 39 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/storage.php; Next offset:89862
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/storage.php (5812) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 40 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/translate.php; Next offset:91477
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/translate.php (4032) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 41 ------
+DEBUG   |121128 10:12:30|  Adding installation/includes/utils.php; Next offset:93324
+DEBUG   |121128 10:12:30|  Virtual add:installation/includes/utils.php (4526) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 42 ------
+DEBUG   |121128 10:12:30|  Adding installation/index.php; Next offset:94671
+DEBUG   |121128 10:12:30|  Virtual add:installation/index.php (3614) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 43 ------
+DEBUG   |121128 10:12:30|  Adding installation/js/cookie.js; Next offset:95524
+DEBUG   |121128 10:12:30|  Virtual add:installation/js/cookie.js (1901) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 44 ------
+DEBUG   |121128 10:12:30|  Adding installation/js/install.js; Next offset:100895
+DEBUG   |121128 10:12:30|  Virtual add:installation/js/install.js (23461) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 45 ------
+DEBUG   |121128 10:12:30|  Adding installation/js/jquery-ui.min.js; Next offset:153070
+DEBUG   |121128 10:12:30|  Virtual add:installation/js/jquery-ui.min.js (201874) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 46 ------
+DEBUG   |121128 10:12:30|  Adding installation/js/jquery.blockUI.js; Next offset:158275
+DEBUG   |121128 10:12:30|  Virtual add:installation/js/jquery.blockUI.js (15137) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 47 ------
+DEBUG   |121128 10:12:30|  Adding installation/js/jquery.min.js; Next offset:191484
+DEBUG   |121128 10:12:30|  Virtual add:installation/js/jquery.min.js (93867) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 48 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/bg-BG.ini; Next offset:195671
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/bg-BG.ini (9590) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 49 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/cs-CZ.ini; Next offset:200255
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/cs-CZ.ini (9996) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 50 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/da-DK.ini; Next offset:204540
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/da-DK.ini (9626) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 51 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/de-DE.ini; Next offset:209081
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/de-DE.ini (10453) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 52 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/el-GR.ini; Next offset:214788
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/el-GR.ini (16771) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 53 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/en-GB.ini; Next offset:218957
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/en-GB.ini (9312) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 54 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/es-ES.ini; Next offset:223462
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/es-ES.ini (10741) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 55 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/et-EE.ini; Next offset:227649
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/et-EE.ini (9590) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 56 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/fa-IR.ini; Next offset:231836
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/fa-IR.ini (9590) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 57 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/fr-FR.ini; Next offset:236514
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/fr-FR.ini (11079) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 58 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/hu-HU.ini; Next offset:241234
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/hu-HU.ini (9934) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 59 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/it-IT.ini; Next offset:245671
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/it-IT.ini (10157) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 60 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/ja-JP.ini; Next offset:250580
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/ja-JP.ini (11138) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 61 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/lt-LT.ini; Next offset:255252
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/lt-LT.ini (10072) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 62 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/mk-MK.ini; Next offset:259439
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/mk-MK.ini (9590) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 63 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/nb-NO.ini; Next offset:263636
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/nb-NO.ini (9333) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 64 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/nl-NL.ini; Next offset:268171
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/nl-NL.ini (9955) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 65 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/pl-PL.ini; Next offset:272925
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/pl-PL.ini (10150) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 66 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/pt-BR.ini; Next offset:277112
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/pt-BR.ini (9590) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 67 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/pt-PT.ini; Next offset:281696
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/pt-PT.ini (10545) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 68 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/ro-RO.ini; Next offset:285867
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/ro-RO.ini (9561) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 69 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/ru-RU.ini; Next offset:290054
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/ru-RU.ini (9590) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 70 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/sv-SE.ini; Next offset:294392
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/sv-SE.ini (9686) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 71 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/th-TH.ini; Next offset:299218
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/th-TH.ini (11616) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 72 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/tr-TR.ini; Next offset:303557
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/tr-TR.ini (9888) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 73 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/uk-UA.ini; Next offset:308925
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/uk-UA.ini (14788) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 74 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/zh-CN.ini; Next offset:313650
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/zh-CN.ini (9086) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 75 ------
+DEBUG   |121128 10:12:30|  Adding installation/lang/zh-TW.ini; Next offset:317837
+DEBUG   |121128 10:12:30|  Virtual add:installation/lang/zh-TW.ini (9590) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 76 ------
+DEBUG   |121128 10:12:30|  Adding installation/version.php; Next offset:318024
+DEBUG   |121128 10:12:30|  Virtual add:installation/version.php (188) - 8
+DEBUG   |121128 10:12:30|----- Finished operation 77 ------
+DEBUG   |121128 10:12:30|  Skipping installation/sql/
+DEBUG   |121128 10:12:30|----- Finished operation 78 ------
+DEBUG   |121128 10:12:30|Done
+DEBUG   |121128 10:12:30|Initializing with JPA package has finished
+DEBUG   |121128 10:12:30|AECoreDomainInstaller:: archive is initialized
+DEBUG   |121128 10:12:30|----- Finished operation 79 ------
+DEBUG   |121128 10:12:30|Successful Smart algorithm on AECoreDomainInstaller
+DEBUG   |121128 10:12:30|Kettenrad :: Domain 'installer' has finished.
+DEBUG   |121128 10:12:30|====== Finished Step number 1 ======
+DEBUG   |121128 10:12:30|*** Engine steps batching: Break flag detected.
+DEBUG   |121128 10:12:30|*** Batching of engine steps finished. I will now return control to the caller.
+DEBUG   |121128 10:12:30|Sleeping for 1907.89699554 msec, using usleep()
+DEBUG   |121128 10:12:32|Saving Kettenrad instance backend
+DEBUG   |121128 10:12:32| -- Loaded stored Akeeba Factory (backend)
+DEBUG   |121128 10:12:32|====== Starting Step number 2 ======
+DEBUG   |121128 10:12:32|Kettenrad :: BREAKING STEP BEFORE SWITCHING DOMAIN
+DEBUG   |121128 10:12:32|AECoreDomainDb :: New instance
+DEBUG   |121128 10:12:32|AECoreDomainDb :: Preparing instance
+DEBUG   |121128 10:12:32|Fetching filter data from database
+DEBUG   |121128 10:12:32|Loading filters
+DEBUG   |121128 10:12:32|-- Loading filter Srpfiles
+DEBUG   |121128 10:12:32|-- Loading filter Directories
+DEBUG   |121128 10:12:32|-- Loading filter Srpskipfiles
+DEBUG   |121128 10:12:32|-- Loading filter Incremental
+DEBUG   |121128 10:12:32|-- Loading filter Tables
+DEBUG   |121128 10:12:32|-- Loading filter Skipfiles
+DEBUG   |121128 10:12:32|-- Loading filter Skipdirs
+DEBUG   |121128 10:12:32|-- Loading filter Srpskipdata
+DEBUG   |121128 10:12:32|-- Loading filter Srpdirs
+DEBUG   |121128 10:12:32|-- Loading filter Srpdata
+DEBUG   |121128 10:12:32|-- Loading filter Tabledata
+DEBUG   |121128 10:12:32|-- Loading filter Files
+DEBUG   |121128 10:12:32|-- Loading filter PlatformLibraries
+DEBUG   |121128 10:12:32|-- Loading filter PlatformSystemcachefiles
+DEBUG   |121128 10:12:32|-- Loading filter PlatformSiteroot
+DEBUG   |121128 10:12:32|-- Loading filter PlatformFolders
+DEBUG   |121128 10:12:32|-- Loading filter PlatformSkipfiles
+DEBUG   |121128 10:12:32|-- Loading filter PlatformSkipdirs
+DEBUG   |121128 10:12:32|-- Loading filter PlatformSitedb
+DEBUG   |121128 10:12:32|-- Loading filter PlatformTabledata
+DEBUG   |121128 10:12:32|-- Loading filter PlatformFiles
+DEBUG   |121128 10:12:32|Loading optional filters
+DEBUG   |121128 10:12:32|-- Loading optional filter StackPlatformFinder
+DEBUG   |121128 10:12:32|----- Finished operation 1 ------
+DEBUG   |121128 10:12:32|AECoreDomainDb :: Iterating next database
+DEBUG   |121128 10:12:32|AEDumpNative :: New instance
+DEBUG   |121128 10:12:32|AEDumpNative :: Processing parameters
+DEBUG   |121128 10:12:32|AEDumpNative :: Instanciating new native database dump engine AEDumpNativeMysql
+DEBUG   |121128 10:12:37|Kettenrad :: Attempting to load from database (backend)
+DEBUG   |121128 10:12:37| -- Loaded stored Akeeba Factory (backend)
+DEBUG   |121128 10:12:37|-- Removing temporary file akzcdeHSnJ9
+DEBUG   |121128 10:12:37|
