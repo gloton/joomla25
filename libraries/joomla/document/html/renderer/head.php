@@ -50,8 +50,21 @@ class JDocumentRendererHead extends JDocumentRenderer
 	 *
 	 * @since   11.1
 	 */
+	/*jagl
+	 * http://magazine.joomla.org/es/ediciones-anteriores/junio-2013/item/1336-desarrollando-plugin-para-joomla-25-parte-2
+	 *Este método lee la información del elemento head desde el objeto document y lo imprime en el 
+	 *búfer en formato de texto html
+	 */
 	public function fetchHead(&$document)
 	{
+		//jagl $document es un objeto JDocumentHTML
+					
+		/*
+		 Si ponemos el comando: 
+		 var_dump($document->getHeadData())
+		 (por ejemplo, justo antes del código que activa el evento) y luego vamos a la página 
+		 principal del sitio, vamos a ver un volcado largo de la salida del getHeadData()
+		 */
 		// Trigger the onBeforeCompileHead event (skip for installation, since it causes an error)
 		$app = JFactory::getApplication();
 		$app->triggerEvent('onBeforeCompileHead');

@@ -118,6 +118,10 @@ class JDocumentHTML extends JDocument
 	 *
 	 * @since   11.1
 	 */
+	//jagl devuelve los datos de la cabecera del documento o página
+	/*
+	 
+	 */
 	public function getHeadData()
 	{
 		$data = array();
@@ -149,7 +153,8 @@ class JDocumentHTML extends JDocument
 		{
 			return;
 		}
-
+		//isset: es verdadero cuando la variable tiene un valor, aunque sea cero.
+		//empty FALSO cuando: $variable tiene un valor distinto de 0 o string distinto de vacio.
 		$this->title = (isset($data['title']) && !empty($data['title'])) ? $data['title'] : $this->title;
 		$this->description = (isset($data['description']) && !empty($data['description'])) ? $data['description'] : $this->description;
 		$this->link = (isset($data['link']) && !empty($data['link'])) ? $data['link'] : $this->link;

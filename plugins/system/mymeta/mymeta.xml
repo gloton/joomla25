@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="system">
+	<name>Mi Meta Plugin</name>
+	<author>Carlos Rodríguez</author>
+	<creationDate>Marzo 2013</creationDate>
+	<copyright>Copyright (C) 2013 Carlos Rodríguez. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>gloton@gmail.com</authorEmail>
+	<authorUrl>URL</authorUrl>
+	<version>2.5.0</version>
+	<description>Mi Meta Pluin Descripción</description>
+	<files>
+		<filename plugin="mymeta">mymeta.php</filename>
+	</files>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="revised" type="text"
+					description="Texto para el atributo content del meta revised."
+					label="Revised Content"
+					default=""
+					size="50"
+				/>
+			</fieldset>
+		</fields>
+	</config>
+</extension>
