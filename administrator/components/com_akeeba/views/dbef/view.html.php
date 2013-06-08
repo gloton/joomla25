@@ -3,38 +3,44 @@
  * @package AkeebaBackup
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU General Public License version 3, or later
- *
+ * @version $Id$
  * @since 1.3
  */
 
 // Protect from unauthorized access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die('Restricted Access');
+
+// Load framework base classes
+jimport('joomla.application.component.view');
 
 /**
  * MVC View for Database Table filters
  *
  */
-class AkeebaViewDbef extends FOFViewHtml
+class AkeebaViewDbef extends JView
 {
-	public function onBrowse($tpl = null)
+	function display()
 	{
-		$model = $this->getModel();
-		
-		$task = $model->getState('browse_task', 'normal');
+		$task = JRequest::getCmd('task','normal');
 
+		// Add toolbar buttons
+		JToolBarHelper::title(JText::_('AKEEBA').': <small>'.JText::_('DBEF').'</small>','akeeba');
+		JToolBarHelper::back('AKEEBA_CONTROLPANEL', 'index.php?option='.JRequest::getCmd('option'));
+		
 		// Add custom submenus
-		$toolbar = FOFToolbar::getAnInstance(FOFInput::getCmd('option','com_foobar',$this->input), $this->config);
-		$toolbar->appendLink(
+		JSubMenuHelper::addEntry(
 			JText::_('FILTERS_LABEL_NORMALVIEW'),
-			JURI::base().'index.php?option=com_akeeba&view=dbef&task=normal',
+			JURI::base().'index.php?option=com_akeeba&view='.JRequest::getCmd('view').'&task=normal',
 			($task == 'normal')
 		);
-		$toolbar->appendLink(
+		JSubMenuHelper::addEntry(
 			JText::_('FILTERS_LABEL_TABULARVIEW'),
-			JURI::base().'index.php?option=com_akeeba&view=dbef&task=tabular',
+			JURI::base().'index.php?option=com_akeeba&view='.JRequest::getCmd('view').'&task=tabular',
 			($task == 'tabular')
 		);
 
+		// Add references to scripts and CSS
+		AkeebaHelperIncludes::includeMedia(false);
 		$media_folder = JURI::base().'../media/com_akeeba/';
 
 		// Get the root URI for media files
@@ -62,7 +68,7 @@ class AkeebaViewDbef extends FOFViewHtml
 		{
 			case 'normal':
 			default:
-				$this->setLayout('default');
+				$tpl = null;
 
 				// Get a JSON representation of the database data
 				$model = $this->getModel();
@@ -71,7 +77,7 @@ class AkeebaViewDbef extends FOFViewHtml
 				break;
 
 			case 'tabular':
-				$this->setLayout('tabular');
+				$tpl = 'tab';
 
 				// Get a JSON representation of the tabular filter data
 				$model = $this->getModel();
@@ -82,7 +88,7 @@ class AkeebaViewDbef extends FOFViewHtml
 		}
 
 		// Add live help
-		AkeebaHelperIncludes::addHelp('dbef');
+		AkeebaHelperIncludes::addHelp();
 
 		// Get profile ID
 		$profileid = AEPlatform::getInstance()->get_active_profile();
@@ -95,6 +101,6 @@ class AkeebaViewDbef extends FOFViewHtml
 		$profile_data = $model->getProfile();
 		$this->assign('profilename', $profile_data->description);
 
-		return true;
+		parent::display($tpl);
 	}
 }

@@ -5,11 +5,11 @@
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU GPL version 3 or, at your option, any later version
  * @package akeebaengine
- *
+ * @version $Id: scanner.php 410 2011-01-24 11:29:01Z nikosdion $
  */
 
 // Protection against direct access
-defined('AKEEBAENGINE') or die();
+defined('AKEEBAENGINE') or die('Restricted access');
 
 /* Windows system detection */
 if(!defined('_AKEEBA_IS_WINDOWS'))

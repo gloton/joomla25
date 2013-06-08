@@ -5,11 +5,11 @@
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU GPL version 3 or, at your option, any later version
  * @package akeebaengine
- *
+ * @version $Id: filter.php 595 2011-05-12 08:24:21Z nikosdion $
  */
 
 // Protection against direct access
-defined('AKEEBAENGINE') or die();
+defined('AKEEBAENGINE') or die('Restricted access');
 
 abstract class AEAbstractFilter extends AEAbstractObject
 {

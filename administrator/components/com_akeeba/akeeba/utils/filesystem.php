@@ -5,11 +5,11 @@
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU GPL version 3 or, at your option, any later version
  * @package akeebaengine
- *
+ * @version $Id$
  */
 
 // Protection against direct access
-defined('AKEEBAENGINE') or die();
+defined('AKEEBAENGINE') or die('Restricted access');
 
 /**
  * Utility functions related to filesystem objects, e.g. path translation
@@ -92,34 +92,17 @@ class AEUtilFilesystem
 		{
 			$host = AEPlatform::getInstance()->get_host();
 			$version = defined('AKEEBA_VERSION') ? AKEEBA_VERSION : 'svn';
-			$platformVars = AEPlatform::getInstance()->getPlatformVersion();
-			
-			$siteName = AEPlatform::getInstance()->get_site_name();
-			$siteName = htmlentities(utf8_decode($siteName));
-			$siteName = preg_replace(
-				array('/&szlig;/','/&(..)lig;/', '/&([aouAOU])uml;/','/&(.)[^;]*;/'),
-				array('ss',"$1","$1".'e',"$1"),
-				$siteName);
-			$siteName = trim(strtolower($siteName));
-			$siteName = preg_replace(array('/\s+/','/[^A-Za-z0-9\-]/'), array('-',''), $siteName);
-			if (strlen($siteName) > 50) {
-				$siteName = substr($siteName, 0, 50);
-			}
-			
 			$variables = array(
-				'[DATE]' => AEPlatform::getInstance()->get_local_timestamp("Ymd"),
-				'[YEAR]' => AEPlatform::getInstance()->get_local_timestamp("Y"),
-				'[MONTH]' => AEPlatform::getInstance()->get_local_timestamp("m"),
-				'[DAY]' => AEPlatform::getInstance()->get_local_timestamp("d"),
-				'[TIME]' => AEPlatform::getInstance()->get_local_timestamp("His"),
-				'[WEEK]' => AEPlatform::getInstance()->get_local_timestamp("W"),
-				'[WEEKDAY]' => AEPlatform::getInstance()->get_local_timestamp("w"),
+				'[DATE]' => AEPlatform::getInstance()->get_local_timestamp("%Y%m%d"),
+				'[YEAR]' => AEPlatform::getInstance()->get_local_timestamp("%Y"),
+				'[MONTH]' => AEPlatform::getInstance()->get_local_timestamp("%m"),
+				'[DAY]' => AEPlatform::getInstance()->get_local_timestamp("%d"),
+				'[TIME]' => AEPlatform::getInstance()->get_local_timestamp("%H%M%S"),
+				'[WEEK]' => AEPlatform::getInstance()->get_local_timestamp("%U"),
+				'[WEEKDAY]' => AEPlatform::getInstance()->get_local_timestamp("%A"),
 				'[HOST]' => empty($host) ? 'unknown_host' : $host,
 				'[RANDOM]' => md5(microtime()),
-				'[VERSION]'	=> $version,
-				'[PLATFORM_NAME]' => $platformVars['name'],
-				'[PLATFORM_VERSION]' => $platformVars['version'],
-				'[SITENAME]' => $siteName
+				'[VERSION]'	=> $version
 			);
 		}
 

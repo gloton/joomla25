@@ -3,16 +3,20 @@
  * @package AkeebaBackup
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU General Public License version 3, or later
+ * @version $Id$
  * @since 1.3
  */
 
 // Protect from unauthorized access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die('Restricted Access');
+
+// Load framework base classes
+jimport('joomla.application.component.model');
 
 /**
  * The Configuration Wizard model class
  */
-class AkeebaModelConfwiz extends FOFModel
+class AkeebaModelConfwiz extends JModel
 {
 	
 	/**
@@ -208,38 +212,33 @@ class AkeebaModelConfwiz extends FOFModel
 		// If the RAM allowance is too low, assume 2Mb (emperical value)
 		if($ram_allowance < 2097152) $ram_allowance = 2097152;
 		
-		$rowCount = 100;
-		
 		// Get the table statistics
 		$db = $this->getDBO();
-		if(strtolower(substr($db->name,0,5)) == 'mysql') {
-			// The table analyzer only works with MySQL
-			$db->setQuery( "SHOW TABLE STATUS" );
-			$metrics = $db->loadAssocList();
-			if($db->getError()) {
-				// SHOW TABLE STATUS is not supported. I'll assume a safe-ish value of 100 rows
-				$rowCount = 100;
-			} else {
-				$rowCount = 1000; // Start with the default value
-				if(!empty($metrics)) {
-					foreach($metrics as $table) {
-						// Get row count and average row length
-						$rows = $table['Rows'];
-						$avg_len = $table['Avg_row_length'];
-
-						// Calculate RAM usage with current settings
-						$max_rows = min($rows, $rowCount);
-						$max_ram_current = $max_rows *  $avg_len;
-						if($max_ram_current > $ram_allowance) {
-							// Hm... over the allowance. Let's try to find a sweet spot.
-							$max_rows = (int)($ram_allowance / $avg_len);
-							// Quantize to multiple of 10 rows
-							$max_rows = 10 * floor($max_rows / 10);
-							// Can't really go below 10 rows / batch
-							if($max_rows < 10) $max_rows = 10;
-							// If the new setting is less than the current $rowCount, use the new setting
-							if($rowCount > $max_rows) $rowCount = $max_rows;
-						}
+		$db->setQuery( "SHOW TABLE STATUS" );
+		$metrics = $db->loadAssocList();
+		if($db->getError()) {
+			// SHOW TABLE STATUS is not supported. I'll assume a safe-ish value of 100 rows
+			$rowCount = 100;
+		} else {
+			$rowCount = 1000; // Start with the default value
+			if(!empty($metrics)) {
+				foreach($metrics as $table) {
+					// Get row count and average row length
+					$rows = $table['Rows'];
+					$avg_len = $table['Avg_row_length'];
+					
+					// Calculate RAM usage with current settings
+					$max_rows = min($rows, $rowCount);
+					$max_ram_current = $max_rows *  $avg_len;
+					if($max_ram_current > $ram_allowance) {
+						// Hm... over the allowance. Let's try to find a sweet spot.
+						$max_rows = (int)($ram_allowance / $avg_len);
+						// Quantize to multiple of 10 rows
+						$max_rows = 10 * floor($max_rows / 10);
+						// Can't really go below 10 rows / batch
+						if($max_rows < 10) $max_rows = 10;
+						// If the new setting is less than the current $rowCount, use the new setting
+						if($rowCount > $max_rows) $rowCount = $max_rows;
 					}
 				}
 			}
@@ -290,17 +289,10 @@ class AkeebaModelConfwiz extends FOFModel
 		if ($ftpOptions['enabled'] == 1) {
 			// Connect the FTP client
 			jimport('joomla.client.ftp');
-			if(version_compare(JVERSION,'3.0','ge')) {
-				$ftp = JClientFTP::getInstance(
-					$ftpOptions['host'], $ftpOptions['port'], null,
-					$ftpOptions['user'], $ftpOptions['pass']
-				);
-			} else {
-				$ftp = JFTP::getInstance(
-					$ftpOptions['host'], $ftpOptions['port'], null,
-					$ftpOptions['user'], $ftpOptions['pass']
-				);
-			}
+			$ftp = &JFTP::getInstance(
+				$ftpOptions['host'], $ftpOptions['port'], null,
+				$ftpOptions['user'], $ftpOptions['pass']
+			);
 		}
 
 		if(@chmod($path, $mode))
@@ -340,7 +332,7 @@ class AkeebaModelConfwiz extends FOFModel
 	 */
 	private function minexec()
 	{
-		$seconds = FOFInput::getFloat('seconds', '0.5', $this->input);
+		$seconds = JRequest::getFloat('seconds','0.5');
 
 		if ($seconds < 1) { 
 			usleep($seconds*1000000); 
@@ -358,8 +350,8 @@ class AkeebaModelConfwiz extends FOFModel
 	private function applyminexec()
 	{
 		// Get the user parameters
-		$iframes = FOFInput::getInt('iframes', 0, $this->input);
-		$minexec = FOFInput::getFloat('minecxec', 2.0, $this->input);
+		$iframes = JRequest::getInt('iframes',0);
+		$minexec = JRequest::getFloat('minecxec',2.0);
 		
 		// Save the settings
 		$profile_id = AEPlatform::getInstance()->get_active_profile();
@@ -383,11 +375,7 @@ class AkeebaModelConfwiz extends FOFModel
 	private function directories()
 	{
 		$timer = AEFactory::getTimer();
-		if(interface_exists('JModel')) {
-			$model = JModelLegacy::getInstance('Confwiz','AkeebaModel');
-		} else {
-			$model = JModel::getInstance('Confwiz','AkeebaModel');
-		}
+		$model = JModel::getInstance('Confwiz','AkeebaModel');
 		$result = $model->autofixDirectories();
 		$timer->enforce_min_exec_time(false);
 		return $result;
@@ -400,11 +388,7 @@ class AkeebaModelConfwiz extends FOFModel
 	private function database()
 	{
 		$timer = AEFactory::getTimer();
-		if(interface_exists('JModel')) {
-			$model = JModelLegacy::getInstance('Confwiz','AkeebaModel');
-		} else {
-			$model = JModel::getInstance('Confwiz','AkeebaModel');
-		}
+		$model = JModel::getInstance('Confwiz','AkeebaModel');
 		$model->analyzeDatabase();
 		$timer->enforce_min_exec_time(false);
 		return true;
@@ -416,13 +400,9 @@ class AkeebaModelConfwiz extends FOFModel
 	 */
 	private function maxexec()
 	{
-		$seconds = FOFInput::getInt('seconds', 30, $this->input);
+		$seconds = JRequest::getInt('seconds', 30);
 		$timer = AEFactory::getTimer();
-		if(interface_exists('JModel')) {
-			$model = JModelLegacy::getInstance('Confwiz','AkeebaModel');
-		} else {
-			$model = JModel::getInstance('Confwiz','AkeebaModel');
-		}
+		$model = JModel::getInstance('Confwiz','AkeebaModel');
 		$result = $model->doNothing($seconds);
 		$timer->enforce_min_exec_time(false);
 		return $result;
@@ -435,7 +415,7 @@ class AkeebaModelConfwiz extends FOFModel
 	private function applymaxexec()
 	{
 		// Get the user parameters
-		$maxexec = FOFInput::getInt('seconds', 2, $this->input);
+		$maxexec = JRequest::getInt('seconds',2);
 		
 		// Save the settings
 		$timer = AEFactory::getTimer();
@@ -462,13 +442,9 @@ class AkeebaModelConfwiz extends FOFModel
 	public function partsize()
 	{
 		$timer = AEFactory::getTimer();
-		$blocks = FOFInput::getInt('blocks', 1, $this->input);
+		$blocks = JRequest::getInt('blocks', 1);
 		
-		if(interface_exists('JModel')) {
-			$model = JModelLegacy::getInstance('Confwiz','AkeebaModel');
-		} else {
-			$model = JModel::getInstance('Confwiz','AkeebaModel');
-		}
+		$model = JModel::getInstance('Confwiz','AkeebaModel');
 		$result = $model->createTempFile($blocks);
 
 		if($result) {

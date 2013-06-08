@@ -5,11 +5,11 @@
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU GPL version 3 or, at your option, any later version
  * @package akeebaengine
- *
+ * @version $Id$
  */
 
 // Protection against direct access
-defined('AKEEBAENGINE') or die();
+defined('AKEEBAENGINE') or die('Restricted access');
 
 /**
  * Backup finalization domain
@@ -213,17 +213,6 @@ class AECoreDomainFinalization extends AEAbstractPart
 			if(!empty($parts)) foreach($parts as $file) {
 				$parts_list .= "\t".basename($file)."\n";
 			}
-			
-			// Get the remote storage status
-			$remote_status = '';
-			$post_proc_engine = AEFactory::getConfiguration()->get('akeeba.advanced.proc_engine');
-			if(!empty($post_proc_engine) && ($post_proc_engine != 'none')) {
-				if(empty($stat->remote_filename)) {
-					$remote_status = AEPlatform::getInstance()->translate('COM_AKEEBA_EMAIL_POSTPROCESSING_FAILED');
-				} else {
-					$remote_status = AEPlatform::getInstance()->translate('COM_AKEEBA_EMAIL_POSTPROCESSING_SUCCESS');
-				}
-			}
 
 			// Do we need a default subject?
 			if(empty($subject)) {
@@ -247,7 +236,6 @@ class AECoreDomainFinalization extends AEAbstractPart
 				$body = str_replace('[PROFILENAME]', $profile_name, $body);
 				$body = str_replace('[PARTCOUNT]', $num_parts, $body);
 				$body = str_replace('[FILELIST]', $parts_list, $body);
-				$body = str_replace('[REMOTESTATUS]', $remote_status, $body);
 			}
 			// Sometimes $body contains literal \n instead of newlines
 			$body = str_replace('\\n',"\n", $body);
@@ -586,7 +574,7 @@ class AECoreDomainFinalization extends AEAbstractPart
 			$killDatetime->modify('-'.$daysQuota.($daysQuota == 1 ? ' day' : ' days'));
 			$killTS = $killDatetime->format('U');
 			foreach($allFiles as $file) {
-				if($file['id'] == $latestBackupId) continue;
+				if($allFiles['id'] == $latestBackupId) continue;
 				
 				// Is this on a preserve day?
 				if($preserveDay > 0) {
@@ -612,7 +600,7 @@ class AECoreDomainFinalization extends AEAbstractPart
 			if( !(count($allFiles) > $countQuota) )
 			{
 				// No, effectively skip the quota checking
-				$leftover = $allFiles;
+				$leftover =& $allFiles;
 			}
 			else
 			{
@@ -647,7 +635,7 @@ class AECoreDomainFinalization extends AEAbstractPart
 		else
 		{
 			// No count quotas are applied
-			$leftover = $allFiles;
+			$leftover =& $allFiles;
 		}
 
 		// Do we need to apply size quotas?
@@ -940,31 +928,15 @@ class AECoreDomainFinalization extends AEAbstractPart
 
 		$statsTable = AEPlatform::getInstance()->tableNameStats;
 		$db = AEFactory::getDatabase( AEPlatform::getInstance()->get_platform_database_options() );
-		$query = $db->getQuery(true)
-			->select($db->qn('id'))
-			->from($db->qn($statsTable))
-			->where($db->qn('status').' = '.$db->q('complete'))
-			->where($db->qn('filesexist').'='.$db->q('0'))
-			->order($db->qn('id').' DESC');
-		
-		$db->setQuery($query, $limit, 100000);
-		if(version_compare(JVERSION, '3.0', 'ge')) {
-			$array = $db->loadColumn();
-		} else {
-			$array = $db->loadResultArray();
-		}
+		$query = 'SELECT `id` FROM '.$db->nameQuote($statsTable).' WHERE `status` = \'complete\' AND `filesexist` = 0 ORDER BY `id` DESC LIMIT '.$limit.',100000';
+		$db->setQuery($query);
+		$array = $db->loadResultArray();
 
 		if(empty($array)) return;
 
-		$ids = array();
-		foreach($array as $id) {
-			$ids[] = $db->q($id);
-		}
-		$ids = implode(',', $ids);
+		$ids = implode(',', $array);
 
-		$query = $db->getQuery(true)
-			->delete($db->qn($statsTable))
-			->where($db->qn('id')." IN ($ids)");
+		$query = "DELETE FROM ".$db->nameQuote($statsTable)." WHERE ".$db->nameQuote('id')." IN ($ids)";
 		$db->setQuery($query);
 		$db->query();
 	}

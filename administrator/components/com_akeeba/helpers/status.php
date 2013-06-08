@@ -3,11 +3,11 @@
  * @package AkeebaBackup
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU General Public License version 3, or later
- *
+ * @version $Id: status.php 409 2011-01-24 09:30:22Z nikosdion $
  * @since 1.3
  */
 
-defined('_JEXEC') or die();
+defined('_JEXEC') or die('Restricted access');
 
 /**
  * A class with utility functions to get the backup readiness status,
@@ -32,7 +32,7 @@ class AkeebaHelperStatus extends JObject
 	 *
 	 * @return AkeebaHelperStatus
 	 */
-	public static function &getInstance()
+	public function &getInstance()
 	{
 		static $instance;
 
@@ -73,15 +73,15 @@ class AkeebaHelperStatus extends JObject
 
 		if($status && empty($quirks))
 		{
-			$html = '<p class="alert alert-success">'.JText::_('STATUS_OK').'</p>';
+			$html = '<p class="ok ui-state-normal">'.JText::_('STATUS_OK').'</p>';
 		}
 		elseif($status && !empty($quirks))
 		{
-			$html = '<p class="alert">'.JText::_('STATUS_WARNING').'</p>';
+			$html = '<p class="statuswarning ui-state-highlight">'.JText::_('STATUS_WARNING').'</p>';
 		}
 		else
 		{
-			$html = '<p class="alert alert-error">'.JText::_('STATUS_ERROR').'</p>';
+			$html = '<p class="notok ui-state-error">'.JText::_('STATUS_ERROR').'</p>';
 		}
 		return $html;
 	}

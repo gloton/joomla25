@@ -3,77 +3,75 @@
  * @package AkeebaBackup
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU General Public License version 3, or later
- *
- *
+ * @version $id$
+ * @version $Id$
  */
 
 // Protect from unauthorized access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die('Restricted Access');
+
+// Load framework base classes
+jimport('joomla.application.component.controller');
 
 /**
  * The Backup Administrator class
  *
  */
-class AkeebaControllerBuadmin extends FOFController
+class AkeebaControllerBuadmin extends JController
 {
 	public function  __construct($config = array()) {
 		parent::__construct($config);
-		// Access check, Joomla! 1.6 style.
-		$user = JFactory::getUser();
-		if (!$user->authorise('akeeba.download', 'com_akeeba')) {
-			$this->setRedirect('index.php?option=com_akeeba');
-			return JError::raiseWarning(403, JText::_('JERROR_ALERTNOAUTHOR'));
-			$this->redirect();
+		if(AKEEBA_JVERSION=='16')
+		{
+			// Access check, Joomla! 1.6 style.
+			$user = JFactory::getUser();
+			if (!$user->authorise('akeeba.download', 'com_akeeba')) {
+				$this->setRedirect('index.php?option=com_akeeba');
+				return JError::raiseWarning(403, JText::_('JERROR_ALERTNOAUTHOR'));
+				$this->redirect();
+			}
+		} else {
+			// Custom ACL for Joomla! 1.5
+			$aclModel = JModel::getInstance('Acl','AkeebaModel');
+			if(!$aclModel->authorizeUser('download')) {
+				$this->setRedirect('index.php?option=com_akeeba');
+				return JError::raiseWarning(403, JText::_('Access Forbidden'));
+				$this->redirect();
+			}
 		}
 		
-		$option = FOFInput::getCmd('option','com_foobar',$this->input);
-		$base_path = JPATH_ADMINISTRATOR.'/components/'.$option.'/plugins';
+		$base_path = JPATH_COMPONENT_ADMINISTRATOR.'/plugins';
 		$model_path = $base_path.'/models';
 		$view_path = $base_path.'/views';
 		$this->addModelPath($model_path);
 		$this->addViewPath($view_path);
+	}
+
+	/**
+	 * Show a list of backup attempts
+	 *
+	 */
+	public function display()
+	{
+		$session = JFactory::getSession();
+		$session->set('buadmin.task', 'default', 'akeeba');
 		
-		$this->setThisModelName('AkeebaModelStatistics');
+		parent::display();
 	}
 	
-	public function execute($task) {
-		$session = JFactory::getSession();
-		switch($task) {
-			case 'add':
-				$this->task = 'browse';
-				break;
-			
-			case 'default':
-				$this->task = 'browse';
-				break;
-			
-			case 'browse':
-				$session->set('buadmin.task', 'default', 'akeeba');
-				$this->task = 'browse';
-				break;
-			
-			case 'restorepoint':
-				if(!AKEEBA_PRO) {
-					JError::raiseError('403',JText::_('AKEEBA_POSTSETUP_NOTAVAILABLEINCORE'));
-					return false;
-				}
-				$session->set('buadmin.task', 'restorepoint', 'akeeba');
-				$this->task = 'browse';
-				break;
-			
-			case 'showcomment':
-				$this->layout = 'comment';
-				$this->task = 'edit';
-				break;
-			
-			default:
-				$this->task = $task;
-				break;
+	public function restorepoint()
+	{
+		if(!AKEEBA_PRO) {
+			JError::raiseError('403',JText::_('AKEEBA_POSTSETUP_NOTAVAILABLEINCORE'));
+			return false;
 		}
 		
-		FOFInput::setVar('task', $this->task, $this->input);
-		$this->getThisView()->setLayout($this->layout);
-		parent::execute($this->task);
+		$session = JFactory::getSession();
+		$session->set('buadmin.task', 'restorepoint', 'akeeba');
+		
+		JRequest::setVar('layout','restorepoint');
+		
+		parent::display();
 	}
 
 	/**
@@ -83,10 +81,9 @@ class AkeebaControllerBuadmin extends FOFController
 	 */
 	public function download()
 	{
-		$model = $this->getThisModel();
-		$id = $model->getId();
-		
-		$part = FOFInput::getInt('part', -1, $this->input);
+		$cid = JRequest::getVar('cid',array(),'default','array');
+		$id = JRequest::getInt('id');
+		$part = JRequest::getInt('part',-1);
 
 		if(empty($id))
 		{
@@ -103,13 +100,13 @@ class AkeebaControllerBuadmin extends FOFController
 		if($id <= 0)
 		{
 			$session = JFactory::getSession();
-			$task = $session->get('buadmin.task', 'browse', 'akeeba');
+			$task = $session->get('buadmin.task', 'default', 'akeeba');
 			
 			$this->setRedirect(JURI::base().'index.php?option=com_akeeba&view=buadmin&task='.$task, JText::_('STATS_ERROR_INVALIDID'), 'error');
 			parent::display();
 			return;
 		}
-		
+
 		$stat = AEPlatform::getInstance()->get_statistics($id);
 		$allFilenames = AEUtilStatistics::get_all_filenames($stat);
 
@@ -130,7 +127,7 @@ class AkeebaControllerBuadmin extends FOFController
 		if(is_null($filename) || empty($filename) || !@file_exists($filename) )
 		{
 			$session = JFactory::getSession();
-			$task = $session->get('buadmin.task', 'browse', 'akeeba');
+			$task = $session->get('buadmin.task', 'default', 'akeeba');
 			
 			$this->setRedirect(JURI::base().'index.php?option=com_akeeba&view=buadmin&task='.$task, JText::_('STATS_ERROR_INVALIDDOWNLOAD'), 'error');
 			parent::display();
@@ -160,7 +157,7 @@ class AkeebaControllerBuadmin extends FOFController
 			@clearstatcache();
 			// Send MIME headers
 			header('MIME-Version: 1.0');
-			header('Content-Disposition: attachment; filename="'.$basename.'"');
+			header('Content-Disposition: attachment; filename='.$basename);
 			header('Content-Transfer-Encoding: binary');
 			header('Accept-Ranges: bytes');
 			
@@ -210,12 +207,12 @@ class AkeebaControllerBuadmin extends FOFController
 	public function remove()
 	{
 		// CSRF prevention
-		if($this->csrfProtection) {
-			$this->_csrfProtection();
+		if(!JRequest::getVar(JUtility::getToken(), false, 'POST')) {
+			JError::raiseError('403', JText::_(version_compare(JVERSION, '1.6.0', 'ge') ? 'JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN' : 'Request Forbidden'));
 		}
-
-		$cid = FOFInput::getArray('cid', array(), $this->input);
-		$id = FOFInput::getInt('id', 0, $this->input);
+		
+		$cid = JRequest::getVar('cid',array(),'default','array');
+		$id = JRequest::getInt('id');
 		if(empty($id))
 		{
 			if(!empty($cid) && is_array($cid))
@@ -223,7 +220,7 @@ class AkeebaControllerBuadmin extends FOFController
 				foreach ($cid as $id)
 				{
 					$session = JFactory::getSession();
-					$task = $session->get('buadmin.task', 'browse', 'akeeba');
+					$task = $session->get('buadmin.task', 'default', 'akeeba');
 					$result = $this->_remove($id);
 					if(!$result) $this->setRedirect(JURI::base().'index.php?option=com_akeeba&view=buadmin&task='.$task, JText::_('STATS_ERROR_INVALIDID'), 'error');
 				}
@@ -231,7 +228,7 @@ class AkeebaControllerBuadmin extends FOFController
 			else
 			{
 				$session = JFactory::getSession();
-				$task = $session->get('buadmin.task', 'browse', 'akeeba');
+				$task = $session->get('buadmin.task', 'default', 'akeeba');
 				$this->setRedirect(JURI::base().'index.php?option=com_akeeba&view=buadmin&task='.$task, JText::_('STATS_ERROR_INVALIDID'), 'error');
 				return;
 			}
@@ -240,13 +237,15 @@ class AkeebaControllerBuadmin extends FOFController
 		{
 			$result = $this->_remove($id);
 			$session = JFactory::getSession();
-			$task = $session->get('buadmin.task', 'browse', 'akeeba');
+			$task = $session->get('buadmin.task', 'default', 'akeeba');
 			if(!$result) $this->setRedirect(JURI::base().'index.php?option=com_akeeba&view=buadmin&task='.$task, JText::_('STATS_ERROR_INVALIDID'), 'error');
 		}
-		
+
 		$session = JFactory::getSession();
-		$task = $session->get('buadmin.task', 'browse', 'akeeba');
+		$task = $session->get('buadmin.task', 'default', 'akeeba');
 		$this->setRedirect(JURI::base().'index.php?option=com_akeeba&view=buadmin&task='.$task, JText::_('STATS_MSG_DELETED'));
+
+		parent::display();
 	}
 
 	/**
@@ -255,14 +254,14 @@ class AkeebaControllerBuadmin extends FOFController
 	public function deletefiles()
 	{
 		// CSRF prevention
-		if($this->csrfProtection) {
-			$this->_csrfProtection();
+		if(!JRequest::getVar(JUtility::getToken(), false, 'POST')) {
+			JError::raiseError('403', JText::_(version_compare(JVERSION, '1.6.0', 'ge') ? 'JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN' : 'Request Forbidden'));
 		}
 		
-		$cid = FOFInput::getArray('cid', array(), $this->input);
-		$id = FOFInput::getInt('id', 0, $this->input);
+		$cid = JRequest::getVar('cid',array(),'default','array');
+		$id = JRequest::getInt('id');
 		$session = JFactory::getSession();
-		$task = $session->get('buadmin.task', 'browse', 'akeeba');
+		$task = $session->get('buadmin.task', 'default', 'akeeba');
 		if(empty($id))
 		{
 			if(!empty($cid) && is_array($cid))
@@ -286,6 +285,8 @@ class AkeebaControllerBuadmin extends FOFController
 		}
 
 		$this->setRedirect(JURI::base().'index.php?option=com_akeeba&view=buadmin&task='.$task, JText::_('STATS_MSG_DELETEDFILE'));
+
+		parent::display();
 	}
 
 	/**
@@ -296,7 +297,7 @@ class AkeebaControllerBuadmin extends FOFController
 	private function _remove($id)
 	{
 		$session = JFactory::getSession();
-		$task = $session->get('buadmin.task', 'browse', 'akeeba');
+		$task = $session->get('buadmin.task', 'default', 'akeeba');
 		
 		if($id <= 0)
 		{
@@ -304,9 +305,8 @@ class AkeebaControllerBuadmin extends FOFController
 			return;
 		}
 
-		$model = $this->getThisModel();
-		$model->setState('id', $id);
-		return $model->delete();
+		$model = $this->getModel('statistics');
+		return $model->delete($id);
 	}
 
 	/**
@@ -317,7 +317,7 @@ class AkeebaControllerBuadmin extends FOFController
 	private function _removeFiles($id)
 	{
 		$session = JFactory::getSession();
-		$task = $session->get('buadmin.task', 'browse', 'akeeba');
+		$task = $session->get('buadmin.task', 'default', 'akeeba');
 		if($id <= 0)
 		{
 			$this->setRedirect(JURI::base().'index.php?option=com_akeeba&view=buadmin&task='.$task, JText::_('STATS_ERROR_INVALIDID'), 'error');
@@ -325,46 +325,58 @@ class AkeebaControllerBuadmin extends FOFController
 		}
 
 		$model = $this->getModel('statistics');
-		$model->setState('id', $id);
-		return $model->deleteFile();
+		return $model->deleteFile($id);
 	}
 
-	public function onBeforeEdit() {
-		$result = parent::onBeforeEdit();
-		if($result) {
-			$session = JFactory::getSession();
-			$task = $session->get('buadmin.task', 'browse', 'akeeba');
+	public function showcomment()
+	{
+		$cid = JRequest::getVar('cid',array(),'default','array');
+		$id = JRequest::getInt('id');
+		$session = JFactory::getSession();
+		$task = $session->get('buadmin.task', 'default', 'akeeba');
 
-			$model = $this->getThisModel();
-			$id = $model->getId();
-
-			if($id <= 0)
+		if(empty($id))
+		{
+			if(is_array($cid) && !empty($cid))
 			{
-				$this->setRedirect(JURI::base().'index.php?option=com_akeeba&view=buadmin&task='.$task, JText::_('STATS_ERROR_INVALIDID'), 'error');
-				$result = false;
+				$id = $cid[0];
+			}
+			else
+			{
+				$id = -1;
 			}
 		}
-		return $result;
+
+		if($id <= 0)
+		{
+			$this->setRedirect(JURI::base().'index.php?option=com_akeeba&view=buadmin&task='.$task, JText::_('STATS_ERROR_INVALIDID'), 'error');
+			parent::display();
+			return;
+		}
+
+		JRequest::setVar('id', $id);
+
+		parent::display();
 	}
-	
+
 	/**
 	 * Save an edited backup record
 	 */
 	public function save()
 	{
 		// CSRF prevention
-		if($this->csrfProtection) {
-			$this->_csrfProtection();
+		if(!JRequest::getVar(JUtility::getToken(), false, 'POST')) {
+			JError::raiseError('403', JText::_(version_compare(JVERSION, '1.6.0', 'ge') ? 'JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN' : 'Request Forbidden'));
 		}
 		
-		$id = FOFInput::getInt('id', 0, $this->input);
-		$description = FOFInput::getString('description', '', $this->input);
-		$comment = FOFInput::getVar('comment', null, $this->input, 'string', 4);
+		$id = JRequest::getInt('id');
+		$description = JRequest::getString('description');
+		$comment = JRequest::getVar('comment',null,'default','string',4);
 
-		$statistic = AEPlatform::getInstance()->get_statistics(FOFInput::getInt('id', 0, $this->input));
+		$statistic = AEPlatform::getInstance()->get_statistics(JRequest::getInt('id'));
 		$statistic['description']	= $description;
 		$statistic['comment']		= $comment;
-		AEPlatform::getInstance()->set_or_update_statistics(FOFInput::getInt('id', 0, $this->input), $statistic, $self);
+		AEPlatform::getInstance()->set_or_update_statistics(JRequest::getInt('id'),$statistic,$self);
 
 		if( !$this->getError() ) {
 			$message = JText::_('STATS_LOG_SAVEDOK');
@@ -374,25 +386,25 @@ class AkeebaControllerBuadmin extends FOFController
 			$type = 'error';
 		}
 		$session = JFactory::getSession();
-		$task = $session->get('buadmin.task', 'browse', 'akeeba');
+		$task = $session->get('buadmin.task', 'default', 'akeeba');
 		$this->setRedirect(JURI::base().'index.php?option=com_akeeba&view=buadmin&task='.$task, $message, $type);
 	}
 
 	public function restore()
 	{
 		// CSRF prevention
-		if($this->csrfProtection) {
-			$this->_csrfProtection();
+		if(!JRequest::getVar(JUtility::getToken(), false, 'POST')) {
+			JError::raiseError('403', JText::_(version_compare(JVERSION, '1.6.0', 'ge') ? 'JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN' : 'Request Forbidden'));
 		}
 		
 		$id = null;
-		$cid = FOFInput::getArray('cid', array(), $this->input);
+		$cid = JRequest::getVar('cid', array(), 'default', 'array');
 		if(!empty($cid))
 		{
 			$id = intval($cid[0]);
 			if($id <= 0) $id = null;
 		}
-		if(empty($id)) $id = FOFInput::getInt('id', -1, $this->input);
+		if(empty($id)) $id = JRequest::getInt('id', -1);
 		if($id <= 0) $id = null;
 
 		$url = JURI::base().'index.php?option=com_akeeba&view=restore&id='.$id;
@@ -403,13 +415,8 @@ class AkeebaControllerBuadmin extends FOFController
 	
 	public function cancel()
 	{
-		// CSRF prevention
-		if($this->csrfProtection) {
-			$this->_csrfProtection();
-		}
-		
 		$session = JFactory::getSession();
-		$task = $session->get('buadmin.task', 'browse', 'akeeba');
+		$task = $session->get('buadmin.task', 'default', 'akeeba');
 		$this->setRedirect(JURI::base().'index.php?option=com_akeeba&view=buadmin&task='.$task);
 	}
 }

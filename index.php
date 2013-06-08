@@ -135,7 +135,7 @@ JDEBUG ? $_PROFILER->mark('afterRender') : null;
 // Return the response.
 /*jagl
  * Muestra el sitio*/
-echo "<h1>hola 1148</h1>";
+echo "<h1>hola 201306071958</h1>";
 
 // jagl $app = JFactory::getApplication('site');
 //jagl echo $app->requestTime;

@@ -3,26 +3,36 @@
  * @package AkeebaBackup
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU General Public License version 3, or later
+ * @version $Id$
  * @since 3.3.b1
  */
 
 // Protect from unauthorized access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die('Restricted Access');
+
+// Load framework base classes
+jimport('joomla.application.component.view');
 
 /**
  * MVC View for Profiles management
  *
  */
-class AkeebaViewPostsetup extends FOFViewHtml
+class AkeebaViewPostsetup extends JView
 {
-	public function onBrowse($tpl = null)
+	public function display($tpl = null)
 	{
+		JToolBarHelper::title(JText::_('AKEEBA').': <small>'.JText::_('AKEEBA_POSTSETUP').'</small>','akeeba');
+		
+		// Add a spacer, a help button and show the template
+		JToolBarHelper::spacer();
+		
 		$this->_setSRPStatus();
 		$this->_setAutoupdateStatus();
 		$this->_setConfWizStatus();
-		$this->assign('showsrp', $this->isMySQL());
 
-		return true;
+		AkeebaHelperIncludes::includeMedia(false);
+
+		parent::display($tpl);
 	}
 	
 	private function _setAutoupdateStatus()
@@ -34,20 +44,18 @@ class AkeebaViewPostsetup extends FOFViewHtml
 		
 		$db = JFactory::getDBO();
 		
-		$query = $db->getQuery(true)
-			->select($db->qn('enabled'))
-			->from($db->qn('#__extensions'))
-			->where($db->qn('element').' = '.$db->q('oneclickaction'))
-			->where($db->qn('folder').' = '.$db->q('system'));
-		$db->setQuery($query);
+		if( version_compare( JVERSION, '1.6.0', 'ge' ) ) {
+			$db->setQuery("SELECT `enabled` FROM `#__extensions` WHERE element='oneclickaction' AND folder='system'");
+		} else {
+			$db->setQuery("SELECT `published` FROM `#__plugins` WHERE element='oneclickaction' AND folder='system'");
+		}
 		$enabledOCA = $db->loadResult();
 		
-		$query = $db->getQuery(true)
-			->select($db->qn('enabled'))
-			->from($db->qn('#__extensions'))
-			->where($db->qn('element').' = '.$db->q('akeebaupdatecheck'))
-			->where($db->qn('folder').' = '.$db->q('system'));
-		$db->setQuery($query);
+		if( version_compare( JVERSION, '1.6.0', 'ge' ) ) {
+			$db->setQuery("SELECT `enabled` FROM `#__extensions` WHERE element='akeebaupdatecheck' AND folder='system'");
+		} else {
+			$db->setQuery("SELECT `published` FROM `#__plugins` WHERE element='akeebaupdatecheck' AND folder='system'");
+		}
 		$enabledAUC = $db->loadResult();
 		
 		if(!AKEEBA_PRO) {
@@ -61,26 +69,21 @@ class AkeebaViewPostsetup extends FOFViewHtml
 	private function _setSRPStatus()
 	{
 		if($this->_setConfWizStatus()) {
-			$this->assign('enablesrp', $this->isMySQL());
+			$this->assign('enablesrp', true);
 			return;
 		}
 		
 		$db = JFactory::getDBO();
 		
-		$query = $db->getQuery(true)
-			->select($db->qn('enabled'))
-			->from($db->qn('#__extensions'))
-			->where($db->qn('element').' = '.$db->q('srp'))
-			->where($db->qn('folder').' = '.$db->q('system'));
-		$db->setQuery($query);
+		if( version_compare( JVERSION, '1.6.0', 'ge' ) ) {
+			$db->setQuery("SELECT `enabled` FROM `#__extensions` WHERE element='srp' AND folder='system'");
+		} else {
+			$db->setQuery("SELECT `published` FROM `#__plugins` WHERE element='srp' AND folder='system'");
+		}
 		$enableSRP = $db->loadResult();
 		
 		if(!AKEEBA_PRO) {
 			$enableSRP = false;
-		}
-		if(!$this->isMySQL()) {
-			$enableSRP = false;
-			return;
 		}
 		
 		$this->assign('enablesrp', $enableSRP ? true : false);	
@@ -90,29 +93,19 @@ class AkeebaViewPostsetup extends FOFViewHtml
 	{
 		static $enableconfwiz;
 		
-		$component = JComponentHelper::getComponent( 'com_akeeba' );
-		if(is_object($component->params) && ($component->params instanceof JRegistry)) {
-			$params = $component->params;
-		} else {
-			$params = new JParameter($component->params);
-		}
-		
 		if(empty($enableconfwiz)) {
+			$component = JComponentHelper::getComponent( 'com_akeeba' );
+			if(is_object($component->params) && ($component->params instanceof JRegistry)) {
+				$params = $component->params;
+			} else {
+				$params = new JParameter($component->params);
+			}
 			$lv = $params->get( 'lastversion', '' );
 			
 			$enableconfwiz = empty($lv);
 		}
 		
-		$minStability = $params->get( 'minstability', 'stable' );
-		
 		$this->assign('enableconfwiz', $enableconfwiz);
-		$this->assign('minstability', $minStability);
 		return $enableconfwiz;
-	}
-	
-	private function isMySQL()
-	{
-		$db = JFactory::getDbo();
-		return strtolower(substr($db->name, 0, 5)) == 'mysql';
 	}
 }

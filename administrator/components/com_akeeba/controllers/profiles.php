@@ -3,26 +3,41 @@
  * @package AkeebaBackup
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU General Public License version 3, or later
+ * @version $Id: profiles.php 933 2011-09-19 14:25:07Z nikosdion $
  * @since 1.3
  */
 
 // Protect from unauthorized access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die('Restricted Access');
+
+// Load framework base classes
+jimport('joomla.application.component.controller');
 
 /**
- * Controller class for Profiles Administration page
+ * MVC controller class for Profiles Administration page
  *
  */
-class AkeebaControllerProfiles extends FOFController
+class AkeebaControllerProfiles extends JController
 {
 	public function  __construct($config = array()) {
 		parent::__construct($config);
-		// Access check, Joomla! 1.6 style.
-		$user = JFactory::getUser();
-		if (!$user->authorise('core.admin', 'com_akeeba')) {
-			$this->setRedirect('index.php?option=com_akeeba');
-			return JError::raiseWarning(403, JText::_('JERROR_ALERTNOAUTHOR'));
-			$this->redirect();
+		if(AKEEBA_JVERSION=='16')
+		{
+			// Access check, Joomla! 1.6 style.
+			$user = JFactory::getUser();
+			if (!$user->authorise('core.admin', 'com_akeeba')) {
+				$this->setRedirect('index.php?option=com_akeeba');
+				return JError::raiseWarning(403, JText::_('JERROR_ALERTNOAUTHOR'));
+				$this->redirect();
+			}
+		} else {
+			// Custom ACL for Joomla! 1.5
+			$aclModel = JModel::getInstance('Acl','AkeebaModel');
+			if(!$aclModel->authorizeUser('configure')) {
+				$this->setRedirect('index.php?option=com_akeeba');
+				return JError::raiseWarning(403, JText::_('Access Forbidden'));
+				$this->redirect();
+			}
 		}
 		$base_path = JPATH_COMPONENT_ADMINISTRATOR.'/plugins';
 		$model_path = $base_path.'/models';
@@ -32,25 +47,173 @@ class AkeebaControllerProfiles extends FOFController
 	}
 
 	/**
+	 * Displays a list of profiles
+	 *
+	 */
+	public function display()
+	{
+		parent::display();
+	}
+
+	/**
+	 * Handles applying the changes (versus merely saving them)
+	 */
+	public function apply()
+	{
+		// Just delegate the task
+		$this->save();
+	}
+
+	/**
+	 * Processes saving an entry (new or old) and redirecting to the list view
+	 *
+	 */
+	public function save()
+	{
+		// CSRF prevention
+		if(!JRequest::getVar(JUtility::getToken(), false, 'POST')) {
+			JError::raiseError('403', JText::_(version_compare(JVERSION, '1.6.0', 'ge') ? 'JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN' : 'Request Forbidden'));
+		}
+		
+		$data = JRequest::get('POST');
+		$task = JRequest::getCmd('task','save');
+
+		$model = $this->getModel('profiles');
+		if($model->save($data))
+		{
+			// Show a "SAVE OK" message
+			$message = JText::_('PROFILE_SAVE_OK');
+			$type = 'message';
+			if($task == 'apply')
+			{
+				$mytable = $model->getSavedTable();
+				$insertid = $mytable->id;
+				$this->_switchProfile($insertid);
+			}
+		}
+		else
+		{
+			// Show message on failure
+			$message = JText::_('PROFILE_SAVE_ERROR');
+			$message .= ' ['.$model->getError().']';
+			$type = 'error';
+		}
+
+		// Redirect, based on task
+		switch($task)
+		{
+			case 'save':
+				$this->setRedirect('index.php?option='.JRequest::getCmd('option').'&view='.JRequest::getCmd('view'), $message, $type);
+				break;
+
+			case 'apply':
+				$this->setRedirect('index.php?option='.JRequest::getCmd('option').'&view='.JRequest::getCmd('view').'&task=edit&id='.$insertid, $message, $type);
+				break;
+		}
+	}
+
+	/**
+	 * Processes removing an entry and redirecting to list view
+	 *
+	 */
+	public function remove()
+	{
+		// CSRF prevention
+		if(!JRequest::getVar(JUtility::getToken(), false, 'POST')) {
+			JError::raiseError('403', JText::_(version_compare(JVERSION, '1.6.0', 'ge') ? 'JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN' : 'Request Forbidden'));
+		}
+		
+		// Capture active profile ID
+		$session = JFactory::getSession();
+		$active_profile_id = $session->get('profile', null, 'akeeba');
+		if(is_null($active_profile_id))
+		{
+			// No profile is set in the session; use default profile
+			$session->set('profile', 1, 'akeeba');
+			$active_profile_id = 1;
+		}
+		
+		$model = $this->getModel('profiles');
+
+		// Capture profile to be deleted
+		$id_list = $model->getAllIds();
+		if(empty($id_list))
+		{
+			$message = JText::_('PROFILE_DELETE_ERROR');
+			$type = 'error';
+		}
+		else
+		{
+			foreach($id_list as $deleted_profile)
+			{
+				$model->setId($deleted_profile);
+				if($model->delete())
+				{
+					// Show a "SAVE OK" message
+					$message = JText::_('PROFILE_DELETE_OK');
+					$type = 'message';
+
+					// If the deleted profile was the active profile, switch to default
+					if($deleted_profile == $active_profile_id)
+					{
+						$this->_switchProfile(1);
+						$configuration = AEFactory::getConfiguration();
+						AEPlatform::getInstance()->load_configuration(1);
+					}
+				}
+				else
+				{
+					// Show message on failure
+					$message = JText::_('PROFILE_DELETE_ERROR');
+					$message .= ' ['.$model->getError().']';
+					$type = 'error';
+				}
+			}
+		}
+
+
+		// Redirect
+		$this->setRedirect('index.php?option='.JRequest::getCmd('option').'&view='.JRequest::getCmd('view'), $message, $type);
+	}
+
+	/**
+	 * Shows a view where you can add a new record. Actually, delegates to edit().
+	 *
+	 */
+	public function add()
+	{
+		$this->edit(); // Delegate execution
+	}
+
+	/**
+	 * Shows the add/edit screen. Forces the layout, in order to show the correct form.
+	 *
+	 */
+	public function edit()
+	{
+		JRequest::setVar('hidemainmenu', 1);
+		JRequest::setVar('layout', 'default_edit');
+		parent::display();
+	}
+
+	/**
 	 * Copies the selected profile into a new record at the end of the list
 	 *
 	 */
 	public function copy()
 	{
 		// CSRF prevention
-		if($this->csrfProtection) {
-			$this->_csrfProtection();
+		if(!JRequest::getVar(JUtility::getToken(), false, 'POST')) {
+			JError::raiseError('403', JText::_(version_compare(JVERSION, '1.6.0', 'ge') ? 'JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN' : 'Request Forbidden'));
 		}
 		
-		$model = $this->getThisModel();
+		$model = $this->getModel('profiles');
 		if($model->copy())
 		{
 			// Show a "COPY OK" message
 			$message = JText::_('PROFILE_COPY_OK');
 			$type = 'message';
-			
-			$session = JFactory::getSession();
-			$session->set('profile', $model->getId(), 'akeeba');
+			$this->_switchProfile( $model->getId() );
 		}
 		else
 		{
@@ -60,72 +223,27 @@ class AkeebaControllerProfiles extends FOFController
 			$type = 'error';
 		}
 		// Redirect
-		$this->setRedirect('index.php?option=com_akeeba&view=profiles', $message, $type);
+		$this->setRedirect('index.php?option='.JRequest::getCmd('option').'&view='.JRequest::getCmd('view'), $message, $type);
 	}
-	
-	/**
-	 * Imports an exported profile .json file
-	 */
-	public function import()
-	{
-		$this->_csrfProtection();
-		
-		$user = JFactory::getUser();
-		if (!$user->authorise('akeeba.configure', 'com_akeeba')) {
-			return JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
-		}
-		
-		// Get the user
-		$user		= JFactory::getUser();
 
-		// Get some data from the request
-		$file		= FOFInput::getVar('importfile', '', $_FILES, 'array');
-		
-		if (isset($file['name']))
-		{
-			// Load the file data
-			$data = JFile::read($file['tmp_name']);
-			@unlink($file['tmp_name']);
-			
-			// JSON decode
-			$data = json_decode($data, true);
-			
-			// Check for data validity
-			$isValid = is_array($data) && !empty($data);
-			if($isValid) {
-				$isValid = $isValid && array_key_exists('description', $data);
-			}
-			if($isValid) {
-				$isValid = $isValid && array_key_exists('configuration', $data);
-			}
-			if($isValid) {
-				$isValid = $isValid && array_key_exists('filters', $data);
-			}
-			
-			if(!$isValid) {
-				$this->setRedirect('index.php?option=com_akeeba&view=profiles', JText::_('COM_AKEEBA_PROFILES_ERR_IMPORT_INVALID'), 'error');
-				return false;
-			}
-			
-			// Unset the id, if it exists
-			if(array_key_exists('id', $data)) {
-				unset($data['id']);
-			}
-			
-			// Try saving the profile
-			$result = $this->getThisModel()->getTable()->save($data);
-			
-			if($result) {
-				$this->setRedirect('index.php?option=com_akeeba&view=profiles', JText::_('COM_AKEEBA_PROFILES_MSG_IMPORT_COMPLETE'));
-			} else {
-				$this->setRedirect('index.php?option=com_akeeba&view=profiles', JText::_('COM_AKEEBA_PROFILES_ERR_IMPORT_FAILED'), 'error');
-			}
-		}
-		else
-		{
-			$this->setRedirect('index.php?option=com_akeeba&view=profiles', JText::_('MSG_UPLOAD_INVALID_REQUEST'), 'error');
-			return false;
+	/**
+	 * Cancel profile editing
+	 *
+	 */
+	public function cancel()
+	{
+		// CSRF prevention
+		if(!JRequest::getVar(JUtility::getToken(), false, 'POST')) {
+			JError::raiseError('403', JText::_(version_compare(JVERSION, '1.6.0', 'ge') ? 'JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN' : 'Request Forbidden'));
 		}
 		
+		$this->setRedirect('index.php?option='.JRequest::getCmd('option').'&view='.JRequest::getCmd('view'));
+	}
+
+
+	private function _switchProfile($id)
+	{
+		$session = JFactory::getSession();
+		$session->set('profile', $id, 'akeeba');
 	}
 }

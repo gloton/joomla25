@@ -3,12 +3,12 @@
  * @package AkeebaBackup
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU General Public License version 3, or later
- *
+ * @version $Id: encrypt.php 422 2011-01-31 09:39:33Z nikosdion $
  * @since 3.0
  */
 
 // Protection against direct access
-defined('AKEEBAENGINE') or die();
+defined('AKEEBAENGINE') or die('Restricted access');
 
 /**
  * AES implementation in PHP (c) Chris Veness 2005-2011.

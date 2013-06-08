@@ -3,17 +3,20 @@
  * @package AkeebaBackup
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU General Public License version 3, or later
+ * @version $Id$
  * @since 3.3
  */
 
 // Protect from unauthorized access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die('Restricted Access');
+
+jimport('joomla.application.component.model');
 
 /**
  * Self-healing database schema features
  *
  */
-class AkeebaModelSelfheal extends FOFModel
+class AkeebaModelSelfheal extends JModel
 {
 	private $schemata = array();
 	
@@ -55,6 +58,13 @@ CREATE TABLE IF NOT EXISTS `#__ak_stats` (
   PRIMARY KEY  (`id`)
 ) DEFAULT CHARACTER SET utf8;
 ENDSQL;
+		$schemata['#__ak_acl'] = <<<ENDSQL
+CREATE TABLE IF NOT EXISTS `#__ak_acl` (
+	`user_id` BIGINT(20) UNSIGNED NOT NULL,
+	`permissions` MEDIUMTEXT,
+	PRIMARY KEY (`user_id`)
+) DEFAULT CHARACTER SET utf8;
+ENDSQL;
 		$schemata['#__ak_storage'] = <<<ENDSQL
 CREATE TABLE IF NOT EXISTS `#__ak_storage` (
 	`tag` VARCHAR(255) NOT NULL,
@@ -72,9 +82,6 @@ ENDSQL;
 	 */
 	public function healSchema()
 	{
-		// Only run when this component runs under the MySQL database engine
-		if(!$this->isMySQL()) return true;
-		
 		$db = JFactory::getDBO();
 		
 		// Fix missing tables
@@ -82,7 +89,7 @@ ENDSQL;
 			if(!$this->runSQL($this->schemata['#__ak_profiles'])) return false;
 			if(!$this->runSQL($this->schemata['default_profile'])) return false;
 		}
-		foreach(array('#__ak_stats','#__ak_storage') as $table) {
+		foreach(array('#__ak_stats','#__ak_acl','#__ak_storage') as $table) {
 			if(!$this->tableExists($table)) {
 				if(!$this->runSQL($this->schemata[$table])) return false;
 			}
@@ -163,6 +170,11 @@ ENDSQL;
 			return false;
 		}
 		
+		if(!version_compare(JVERSION, '1.6.0', 'ge')) {
+			// Joomla! 1.5 returns the error message on failure
+			if($db->getError()) return false;
+		}
+		
 		return true;
 	}
 
@@ -178,9 +190,9 @@ ENDSQL;
 		$db = JFactory::getDBO();
 		
 		// First, try using DESCRIBE (preferred method)
-		$db->setQuery('DESCRIBE '.$db->qn($table));
+		$db->setQuery('DESCRIBE '.$db->nameQuote($table));
 		try {
-			$columns = $db->loadColumn(0);
+			$columns = $db->loadResultArray(0);
 		} catch(DatabaseException $e) {
 			$columns = null;
 		}
@@ -190,14 +202,14 @@ ENDSQL;
 		}
 		
 		// DESCRIBE failed. Try the hard way...
-		$db->setQuery('SHOW CREATE TABLE '.$db->qn($table));
+		$db->setQuery('SHOW CREATE TABLE '.$db->nameQuote($table));
 		try {
-			$creates = $db->loadColumn(1);
+			$creates = $db->loadResultArray(1);
 		} catch(DatabaseException $e) {
 			return false;
 		}
 		$create = $creates[0];
-		$search = $db->qn($column);
+		$search = $db->nameQuote($column);
 		
 		return strpos($search, $create) !== false;
 	}
@@ -211,12 +223,6 @@ ENDSQL;
 	private function tableExists($table)
 	{
 		$db = JFactory::getDBO();
-		return $this->runSQL('SELECT COUNT(*) FROM '.$db->qn($table));
-	}
-	
-	private function isMySQL()
-	{
-		$db = JFactory::getDbo();
-		return strtolower(substr($db->name, 0, 5)) == 'mysql';
-	}
+		return $this->runSQL('SELECT COUNT(*) FROM '.$db->nameQuote($table));
+	}	
 }

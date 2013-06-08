@@ -6,11 +6,11 @@
  * @license GNU GPL version 3 or, at your option, any later version
  * @package akeebaengine
  * @since 3.4
- *
+ * @version $Id: factory.php 929 2011-09-19 12:32:56Z nikosdion $
  */
 
 // Protection against direct access
-defined('AKEEBAENGINE') or die();
+defined('AKEEBAENGINE') or die('Restricted access');
 
 require_once 'interface.php';
 require_once 'abstract.php';

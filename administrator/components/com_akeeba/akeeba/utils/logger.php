@@ -5,11 +5,11 @@
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU GPL version 3 or, at your option, any later version
  * @package akeebaengine
- *
+ * @version $Id$
  */
 
 // Protection against direct access
-defined('AKEEBAENGINE') or die();
+defined('AKEEBAENGINE') or die('Restricted access');
 
 /**
  * Writes messages to the backup log file
@@ -120,10 +120,8 @@ class AEUtilLogger
 
 		if( ($configuredLoglevel >= $level) && ($configuredLoglevel != 0))
 		{
-			if(!defined('AKEEBADEBUG')) {
-				$message = str_replace( $site_root_untranslated, "<root>", $message );
-				$message = str_replace( $site_root, "<root>", $message );
-			}
+			$message = str_replace( $site_root_untranslated, "<root>", $message );
+			$message = str_replace( $site_root, "<root>", $message );
 			$message = str_replace( "\n", ' \n ', $message );
 			switch( $level )
 			{

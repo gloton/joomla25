@@ -5,11 +5,11 @@
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU GPL version 3 or, at your option, any later version
  * @package akeebaengine
- *
+ * @version $Id$
  */
 
 // Protection against direct access
-defined('AKEEBAENGINE') or die();
+defined('AKEEBAENGINE') or die('Restricted access');
 
 /**
  * A class to load INI files describing the various Akeeba engines and GUI definitions,
@@ -101,12 +101,6 @@ class AEUtilInihelper {
 		
 		if(AKEEBA_PRO) {
 			$path_list[] = AEFactory::getAkeebaRoot().'/plugins/core';
-		}
-		
-		// Add platform configuration files
-		$platform_paths = AEPlatform::getInstance()->getPlatformDirectories();
-		foreach($platform_paths as $p) {
-			$path_list[] = $p.'/config';
 		}
 
 		// Initialize the array where we store our data
@@ -200,23 +194,12 @@ class AEUtilInihelper {
 								$parameters = array();
 								AEUtilINI::parseInterfaceINI($filename, $information, $parameters);
 								if(!empty($gui_list['03.filters']['parameters'])) {
-									/*
 									$gui_list['03.filters']['parameters'][] = array(
 										'title' => '',
 										'description' => '',
 										'type' => 'separator',
 										'default' => ''
 									);
-									*/
-								}
-								if(!array_key_exists('03.filters', $gui_list)) {
-									$gui_list['03.filters'] = array('parameters' => array());
-								}
-								if(!array_key_exists('parameters', $gui_list['03.filters'])) {
-									$gui_list['03.filters']['parameters'] = array();
-								}
-								if(!is_array($parameters)) {
-									$parameters = array();
 								}
 								$gui_list['03.filters']['parameters'] = array_merge( $gui_list['03.filters']['parameters'], $parameters );
 							}

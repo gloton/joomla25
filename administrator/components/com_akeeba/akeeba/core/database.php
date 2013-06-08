@@ -5,11 +5,11 @@
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU GPL version 3 or, at your option, any later version
  * @package akeebaengine
- *
+ * @version $Id$
  */
 
 // Protection against direct access
-defined('AKEEBAENGINE') or die();
+defined('AKEEBAENGINE') or die('Restricted access');
 
 /**
  * A utility class to return a database connection object
@@ -35,7 +35,7 @@ class AECoreDatabase extends AEAbstractObject
 		{
 			if (!empty($instances[$signature]))
 			{
-				$db = $instances[$signature];
+				$db =& $instances[$signature];
 				$db = null;
 				unset($instances[$signature]);
 			}
@@ -69,7 +69,9 @@ class AECoreDatabase extends AEAbstractObject
 				if(substr($driver,0,2) != 'AE') $driver = 'AEDriver'.ucfirst($driver);
 			}
 
-			$instances[$signature] = new $driver($options);
+			$instance	= new $driver($options);
+
+			$instances[$signature] = & $instance;
 		}
 
 		return $instances[$signature];

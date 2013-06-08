@@ -3,41 +3,39 @@
  * @package AkeebaBackup
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU General Public License version 3, or later
- *
+ * @version $Id$
  * @since 1.3
  */
 
-defined('_JEXEC') or die();
-
-JHtml::_('behavior.framework');
+defined('_JEXEC') or die('Restricted access');
 ?>
+<div id="akeeba-container" style="width:100%">
+
 <div id="dialog" title="<?php echo JText::_('FSFILTER_ERROR_TITLE') ?>">
 </div>
 
-<div class="alert alert-info">
-	<strong><?php echo JText::_('CPANEL_PROFILE_TITLE'); ?></strong>
+<fieldset>
+	<legend><?php echo JText::_('CPANEL_PROFILE_TITLE'); ?></legend>
 	#<?php echo $this->profileid; ?> <?php echo $this->profilename; ?>
-</div>
+	&nbsp;&bull;&nbsp;
+	<strong>
+	<a href="index.php?option=com_akeeba&view=fsfilter&task=tabular"><?php echo JText::_('FILTERS_LABEL_VIEWALL')?></a>
+	</strong>
+</fieldset>
 
-<div class="form-inline well">
-	<div>
-		<label><?php echo JText::_('FSFILTER_LABEL_ROOTDIR') ?></label>
+<fieldset>
+	<div id="ak_roots_container">
+		<span><?php echo JText::_('FSFILTER_LABEL_ROOTDIR') ?></span>
 		<span><?php echo $this->root_select; ?></span>
-		<button class="btn btn-danger" onclick="fsfilter_nuke(); return false;">
-			<i class="icon-fire icon-white"></i>
-			<?php echo JText::_('FSFILTER_LABEL_NUKEFILTERS'); ?>
-		</button>
-		<a class="btn btn-small" href="index.php?option=com_akeeba&view=fsfilter&task=tabular">
-			<i class="icon-list"></i>
-			<?php echo JText::_('FILTERS_LABEL_VIEWALL')?>
-		</a>
+		&nbsp;&bull;&nbsp;
+		<button onclick="fsfilter_nuke(); return false;"><?php echo JText::_('FSFILTER_LABEL_NUKEFILTERS'); ?></button>
 	</div>
-</div>
+	<div id="ak_crumbs_container">
+		<div id="ak_crumbs_label"><?php echo JText::_('FSFILTER_LABEL_CURDIR'); ?></div>
+		<div id="ak_crumbs"></div>
+	</div>
 	
-<div id="ak_crumbs_container" class="row-fluid">
-	<ul id="ak_crumbs" class="breadcrumb"></ul>
-</div>
-
+</fieldset>
 
 <div id="ak_main_container">
 	<fieldset id="ak_folder_container">
@@ -51,7 +49,7 @@ JHtml::_('behavior.framework');
 	</fieldset>
 </div>
 
-<script type="text/javascript" language="javascript">
+<script type="text/javascript">
 /**
  * Callback function for changing the active root in Filesystem Filters
  */
@@ -108,3 +106,5 @@ akeeba.jQuery(document).ready(function($){
 	fsfilter_render(data);
 });
 </script>
+
+</div>

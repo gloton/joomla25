@@ -3,19 +3,37 @@
  * @package AkeebaBackup
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU General Public License version 3, or later
+ * @version $Id: profile.php 409 2011-01-24 09:30:22Z nikosdion $
  * @since 1.3
  */
 
 // Protect from unauthorized access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die('Restricted Access');
 
 /**
  * The JTable child implementing #__ak_profiles data handling
  *
  */
-class AkeebaTableProfile extends FOFTable
+class TableProfile extends JTable
 {
-	public function __construct( $table, $key, &$db )
+	/** @var int Primary key */
+	public $id;
+
+	/** @var string Profile description */
+	public $description;
+
+	/** @var string JSON-encoded configuration information */
+	public $configuration;
+
+	/** @var string JSON-encoded filter information */
+	public $filters;
+
+	/**
+	 * Constructor
+	 *
+	 * @param JDatabase $db Joomla!'s database
+	 */
+	public function __construct( &$db )
 	{
 		parent::__construct('#__ak_profiles', 'id', $db);
 	}
@@ -35,23 +53,20 @@ class AkeebaTableProfile extends FOFTable
 
 		return true;
 	}
-	
+
 	/**
-	 * onBeforeDelete event - forbids deleting the default backup profile
-	 * 
-	 * @param int $oid The ID of the profile to delete
-	 * 
-	 * @return boolean True if the deletion is allowed
+	 * Overloads the delete method to ensure we're not deleting the default profile
+	 *
+	 * @param int $id Optional; the record id
 	 */
-	protected function onBeforeDelete($oid)
+	public function delete( $id=null )
 	{
-		$result = parent::onBeforeDelete($oid);
-		if($result) {
-			if($oid == 1) {
-				$this->setError(JText::_('TABLE_PROFILE_CANNOTDELETEDEFAULT'));
-				$result = false;
-			}
+		if (($id==1) || ( is_null($id) && ($this->id == 1) ))
+		{
+			$this->setError(JText::_('TABLE_PROFILE_CANNOTDELETEDEFAULT'));
+			return false;
 		}
-		return $result;
+		else
+		return parent::delete($id);
 	}
 }

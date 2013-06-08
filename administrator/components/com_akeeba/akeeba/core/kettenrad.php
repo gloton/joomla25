@@ -5,11 +5,11 @@
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU GPL version 3 or, at your option, any later version
  * @package akeebaengine
- *
+ * @version $Id$
  */
 
 // Protection against direct access
-defined('AKEEBAENGINE') or die();
+defined('AKEEBAENGINE') or die('Restricted access');
 
 /**
  * This is Akeeba Engine's heart. Kettenrad is reponsible for launching the
@@ -108,10 +108,6 @@ final class AECoreKettenrad extends AEAbstractPart
 
 		// Log step start number
 		AEUtilLogger::WriteLog(_AE_LOG_DEBUG,'====== Starting Step number '.$stepCounter.' ======');
-		if(defined('AKEEBADEBUG')) {
-			$root = AEPlatform::getInstance()->get_site_root();
-			AEUtilLogger::WriteLog(_AE_LOG_DEBUG,'Site root: '.$root);
-		}
 
 		$timer = AEFactory::getTimer();
 		$finished = false;

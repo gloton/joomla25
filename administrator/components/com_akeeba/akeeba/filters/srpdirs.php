@@ -5,11 +5,11 @@
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU GPL version 3 or, at your option, any later version
  * @package akeebaengine
- *
+ * @version $Id: srpdirs.php 641 2011-05-23 17:23:38Z nikosdion $
  */
 
 // Protection against direct access
-defined('AKEEBAENGINE') or die();
+defined('AKEEBAENGINE') or die('Restricted access');
 
 /**
  * System Restore Point - Directories
@@ -111,15 +111,8 @@ class AEFilterSrpdirs extends AEAbstractFilter
 	
 	protected function is_excluded_by_api($test, $root)
 	{
-		AEUtilLogger::WriteLog(_AE_LOG_DEBUG,'SRPDIRS Filter: '.$root.'  '.$test);
-		
 		// Allow scanning the root
 		if(empty($test)) return false;
-		if(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
-			$siteRoot = rtrim(AEPlatform::getInstance()->get_site_root(), '/'.DIRECTORY_SEPARATOR);
-			$thisTest = rtrim($test, '/'.DIRECTORY_SEPARATOR);
-			if($thisTest == $siteRoot) return false;
-		}
 		
 		// If the directory is a subdirectory of a strictly allowed path, exclude it
 		if(!empty($this->strictalloweddirs)) foreach($this->strictalloweddirs as $dir) {

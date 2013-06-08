@@ -5,11 +5,11 @@
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU GPL version 3 or, at your option, any later version
  * @package akeebaengine
- *
+ * @version $Id$
  */
 
 // Protection against direct access
-defined('AKEEBAENGINE') or die();
+defined('AKEEBAENGINE') or die('Restricted access');
 
 /**
  * Backup initialization domain
@@ -111,9 +111,8 @@ class AECoreDomainInit extends AEAbstractPart
 		// PHP configuration variables are tried to be logged only for debug and info log levels
 		if ($registry->get('akeeba.basic.log_level') >= _AE_LOG_INFO ) {
 			AEUtilLogger::WriteLog(_AE_LOG_INFO, "--- System Information ---" );
-			AEUtilLogger::WriteLog(_AE_LOG_INFO, "PHP Version        :" . PHP_VERSION );
-			AEUtilLogger::WriteLog(_AE_LOG_INFO, "PHP OS             :" . PHP_OS );
-			AEUtilLogger::WriteLog(_AE_LOG_INFO, "PHP SAPI           :" . PHP_SAPI );
+			if( function_exists('phpversion'))
+			AEUtilLogger::WriteLog(_AE_LOG_INFO, "PHP Version        :" . phpversion() );
 			if(function_exists('php_uname'))
 			AEUtilLogger::WriteLog(_AE_LOG_INFO, "OS Version         :" . php_uname('s') );
 			$db = AEFactory::getDatabase();
@@ -126,6 +125,8 @@ class AECoreDomainInit extends AEAbstractPart
 				$server = 'n/a';
 			}
 			AEUtilLogger::WriteLog(_AE_LOG_INFO, "Web Server         :" . $server );
+			if(function_exists('php_sapi_name'))
+			AEUtilLogger::WriteLog(_AE_LOG_INFO, "PHP Interface      :" . php_sapi_name() );
 			$platform = 'Unknown platform'; $version = '(unknown version)';
 			$platformData = AEPlatform::getInstance()->getPlatformVersion();
 			AEUtilLogger::WriteLog(_AE_LOG_INFO, $platformData['name']." version    :" . $platformData['version'] );
@@ -163,11 +164,6 @@ class AECoreDomainInit extends AEAbstractPart
 			AEUtilLogger::WriteLog(_AE_LOG_INFO, "You probably do not have to worry about them, but you should be aware of them." );
 			AEUtilLogger::WriteLog(_AE_LOG_INFO, "--------------------------------------------------------------------------------");
 		}
-		
-		if(!version_compare(PHP_VERSION, '5.3.0', 'ge')) {
-			AEUtilLogger::WriteLog(_AE_LOG_WARNING, "You are using an outdated version of PHP. Akeeba Engine may not work properly. Please upgrade to PHP 5.3 or later.");
-		}
-
 
 		// Report profile ID
 		$profile_id = AEPlatform::getInstance()->get_active_profile();

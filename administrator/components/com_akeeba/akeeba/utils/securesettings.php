@@ -3,12 +3,12 @@
  * @package AkeebaBackup
  * @copyright Copyright (c)2009-2012 Nicholas K. Dionysopoulos
  * @license GNU General Public License version 3, or later
- *
+ * @version $Id$
  * @since 3.2
  */
 
 // Protection against direct access
-defined('AKEEBAENGINE') or die();
+defined('AKEEBAENGINE') or die('Restricted access');
 
 /**
  * Implements encrypted settings handling features
@@ -30,9 +30,11 @@ class AEUtilSecuresettings
 			include_once $filename;
 		}
 
-		if(defined('AKEEBA_SERVERKEY')) return base64_decode(AKEEBA_SERVERKEY);
-
-		return '';
+		if(!defined('AKEEBA_SERVERKEY')) {
+			define('AKEEBA_SERVERKEY', base64_encode(''));	
+		}
+		
+		return base64_decode(AKEEBA_SERVERKEY);
 	}
 	
 	/**
