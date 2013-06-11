@@ -12,6 +12,15 @@ jimport('joomla.plugin.plugin');
 */ 
 class plgSystemMyMeta extends JPlugin
 {
+	/*
+	 * cuando carga
+	 * libraries/joomla/document/html/renderer/head.php
+	 * dispara el evento onBeforeCompileHead
+	 * asi que creo que recorre todos los plugin (como este)
+	 * y al encontrar el evento que coincide onBeforeCompileHead
+	 * se ejecutara las intrucciones contenidas dentro
+	 * de esta funcion
+	 *  */
 	function onBeforeCompileHead() 
 	{ 
 		/*
@@ -20,7 +29,6 @@ class plgSystemMyMeta extends JPlugin
 		echo "</pre>";
 		exit ();
 		*/
-		
 		if ($this->params->get('revised')) { 
 			$document = JFactory::getDocument(); 
 			$headData = $document->getHeadData(); 

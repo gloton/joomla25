@@ -58,6 +58,7 @@ class JDocumentRendererHead extends JDocumentRenderer
 	public function fetchHead(&$document)
 	{
 		//jagl $document es un objeto JDocumentHTML
+		//libraries/joomla/document/html/html.php
 					
 		/*
 		 Si ponemos el comando: 
